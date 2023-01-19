@@ -7,7 +7,7 @@ app.set('views',path.join(__dirname,'views'));
 
 app.get('/',function(req,res){
     console.log(req.url);
-    return res.send("This is home page!");
+    return res.render('home');
 })
 
 
