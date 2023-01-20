@@ -12,10 +12,6 @@ let contact_list = [
     {
         name : "Divakar",
         ph : "1234567890"
-    },
-    {
-        name : "Not Divakar",
-        ph : "0987654321"
     }
 ];
 
