@@ -1,4 +1,7 @@
 const express = require('express');
+const db = require('./config/mongoose');
+const Contact = require("./models/contact");
+
 const app = express();
 const port = 3000;
 const path = require('path');
@@ -7,6 +10,7 @@ const bodyParse = require('body-parser');
 app.set('view engine','ejs');
 app.set('views',path.join(__dirname,'views'));
 app.use(bodyParse.urlencoded());
+app.use(express.static('assets'));
 
 let contact_list = [
     {
@@ -28,8 +32,20 @@ app.get('/profile',function(req,res){
 })
 
 app.post('/create-contact',function(req,res){
-    contact_list.push(req.body);
-    return res.redirect('back');
+    // contact_list.push(req.body);
+    // return res.redirect('back');
+    Contact.create({
+        name : req.body.name,
+        phone : req.body.ph
+        }
+        , function(err, newContact){
+        if(err){
+            console.log("error:",err);
+            return;
+        }
+        // console.log("********",newContact);
+        return res.redirect('back');
+    })
 });
 
 app.post('/delete-contact',function(req,res){
@@ -41,6 +57,14 @@ app.post('/delete-contact',function(req,res){
         title : "Contact List",
         contacts : contact_list
     });
+    // Contact.create(req.body, function(err, newContact){
+    //     if(err){
+    //         console.log("error:",err);
+    //         return;
+    //     }
+    //     console.log("********",newContact);
+    //     return res.redirect('back');
+    // })
 })
 
 
