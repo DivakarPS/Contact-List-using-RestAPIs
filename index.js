@@ -12,19 +12,20 @@ app.set('views',path.join(__dirname,'views'));
 app.use(bodyParse.urlencoded());
 app.use(express.static('assets'));
 
-let contact_list = [
-    {
-        name : "Divakar",
-        ph : "1234567890"
-    }
-];
 
 app.get('/',function(req,res){
-    console.log(req.url);
-    return res.render('home',{
-        title : "Contact List",
-        contacts : contact_list
-    });
+
+    Contact.find({}, function(err, contacts){
+        if(err){
+            console.log("error in fetching contacts from db");
+            return;
+        }
+        return res.render('home',{
+            title: "Contact List",
+            contact_list: contacts
+        });
+
+    })
 })
 
 app.get('/profile',function(req,res){
@@ -32,40 +33,55 @@ app.get('/profile',function(req,res){
 })
 
 app.post('/create-contact',function(req,res){
-    // contact_list.push(req.body);
-    // return res.redirect('back');
+   
     Contact.create({
         name : req.body.name,
-        phone : req.body.ph
+        phone : req.body.phone
         }
         , function(err, newContact){
         if(err){
             console.log("error:",err);
             return;
         }
-        // console.log("********",newContact);
-        return res.redirect('back');
-    })
+         console.log("********",newContact);
+        Contact.find({}, function(err, contacts){
+            if(err){
+                console.log("error in fetching contacts from db");
+                return;
+            }
+            return res.render('home',{
+                title: "Contact List",
+                contact_list: contacts
+            });
+    
+        })
+    });
 });
 
-app.post('/delete-contact',function(req,res){
-    var deleteName = req.body.del_name;
-    const arr = contact_list.filter((x) => x.name!=deleteName);
-    contact_list = arr;
+app.get('/delete-contact',function(req,res){
 
-    return res.render('home',{
-        title : "Contact List",
-        contacts : contact_list
+    console.log(req.query);
+    let id=req.query.id;
+    
+    Contact.findByIdAndDelete(id,function(err){
+        if(err){
+            console.log("Error in deleting the name:",req.query.name);
+            return;
+        }
+        Contact.find({}, function(err, contacts){
+            if(err){
+                console.log("error in fetching contacts from db");
+                return;
+            }
+            return res.render('home',{
+                title: "Contact List",
+                contact_list: contacts
+            });
+    
+        })
     });
-    // Contact.create(req.body, function(err, newContact){
-    //     if(err){
-    //         console.log("error:",err);
-    //         return;
-    //     }
-    //     console.log("********",newContact);
-    //     return res.redirect('back');
-    // })
-})
+
+});
 
 
 app.listen(port,function(err){

@@ -4,29 +4,28 @@
    </head>
 
    <body>
-    <h1>The contacts are:</h1>
+    <h1>Your Contacts!</h1>
   
    
     <ul>
-    <% for (i of contacts) {%> 
+    <% for (let i of contact_list) {%> 
         <li>
-            <p><%= i.name %></p>
-            <p><%= i.ph %></p>
-        </li>        
+            <p>Name: <b><%= i.name %></b></p>
+            <p>Contact Number: <b><%= i.phone %></b></p>
+        </li>   
+        <div>
+            <a href="/delete-contact/?id=<%=i.id %>">Delete Contact</a>
+        </div>     
     <%}%>
     </ul>
     
     <form action="/create-contact" method="POST">
         <input type="text" name="name" placeholder="Enter name" required>
-        <input type="text" name="ph" placeholder="Enter phone" required>
+        <input type="text" name="phone" placeholder="Enter phone" required>
         <button type="submit">Add contact</button>
     </form>
-
-    <form action="/delete-contact" method="post">
-        <p>Enter Contact name to be deleted: </p> <input type="text" name="del_name" placeholder="Enter name">
-        <button type="submit">Delete contact</button>
-    </form>
-
+  
+    <script type="text/javascript" src="/js/home.js"></script>
    </body>
 
 </html>
